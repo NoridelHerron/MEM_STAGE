@@ -1,0 +1,14 @@
+# Ignore Vivado temporary files
+*.jou
+*.log
+*.wdb
+*.pb
+*.str
+*.xml
+*.opt
+*.cache/
+*.runs/
+*.sim/
+*.hw/
+*.ip_user_files/
+*.xsim/
