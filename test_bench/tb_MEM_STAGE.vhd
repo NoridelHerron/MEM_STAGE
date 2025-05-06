@@ -144,8 +144,8 @@ begin
 
             -- Compare output from MEM_STAGE with expected value
             if mem_out = expected_memory(rand_addr) and
-               reg_write_out = rand_write and
-               rd_out = rand_rd then
+               reg_write_out = rand_write and mem_read_in = mem_read_out
+               and mem_write_in = mem_write_out and rd_out = rand_rd then
                 passed := passed + 1;
             else
                 report "FAILED on test #" & integer'image(i)
