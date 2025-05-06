@@ -148,6 +148,13 @@ begin
                     severity error;
                 failed := failed + 1;
             end if;
+            
+            if mem_read_in = '1' and mem_write_in = '1' then
+                report "ASSERTION FAILED on test #" & integer'image(i)
+                    & " | Both mem_read_in and mem_write_in are HIGH - this is invalid."
+                    severity failure;
+                failed := failed + 1;
+            end if;
 
             mem_read_in <= '0';
             wait for 10 ns;

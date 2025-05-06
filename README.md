@@ -58,9 +58,11 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
 ![Tcl Output – 5000 Cases](images/tcl.png)  
 *All 5000 randomized memory operations passed. Address calculation, control signal forwarding, and data integrity verified.*
 
-### Waveform: Memory Read
+### Waveform: Memory Read and Memory Write
 ![Waveform Example – Read](images/wave_no_bug.png)  
 *Clean signal behavior during memory read. `mem_read_in = '1'` and `mem_out` matches `expected_memory`.*
+*Clean signal behavior during memory write. `mem_write_in = '1'` and `write_data_`.*
+*rd_in = rd_out and reg_write_in = reg_write_out*
 
 ![Waveform Example – Write](images/wave_with_bug.png)  
 *This waveform shows behavior when an intentional conflict or signal glitch is injected. For debugging purposes, mem_read_in and mem_write_in were briefly allowed to overlap or garbage values ('X', 'Z') were forced into the design to observe how the system responds to invalid states.*
