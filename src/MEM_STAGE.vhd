@@ -32,6 +32,8 @@ entity MEM_STAGE is
     
            -- Output to WB stage
            reg_write_out : out std_logic;
+           mem_read_out : out std_logic;
+           mem_write_out : out std_logic;
            rd_out        : out std_logic_vector(4 downto 0)
          );
 end MEM_STAGE;
@@ -57,9 +59,9 @@ begin
     -- Instantiate memory
     memory_block: DATA_MEM port map (clk, mem_read_in, mem_write_in, mem_address, write_data, mem_out);
 
-    -- Pass-through control and destination signals to WB
-    -- The mem_read_in and mem_write_in are drop because it is no longer needed for the next stage (WB)
+    -- Pass-through control and destination signals to WB 
     reg_write_out <= reg_write_in;
     rd_out        <= rd_in;
-    
+    mem_read_out <= mem_read_in;
+    mem_write_out <= mem_write_in;
 end behavior;

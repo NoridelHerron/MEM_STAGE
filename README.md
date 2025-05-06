@@ -50,8 +50,6 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
 - Tracks `expected_memory` array to verify `mem_out` on each read
 - Simulates signal glitch injection using `'X'` and `'Z'` patterns
 
----
-
 ## 📊 Simulation Results
 
 ### Tcl Console Output
@@ -62,12 +60,10 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
 ![Waveform Example – Read](images/wave_no_bug.png)  
 *Clean signal behavior during memory read. `mem_read_in = '1'` and `mem_out` matches `expected_memory`.*
 *Clean signal behavior during memory write. `mem_write_in = '1'` and `write_data_`.*
-*rd_in = rd_out and reg_write_in = reg_write_out*
+*rd_in = rd_out, reg_write_in = reg_write_out, mem_write_in = mem_write_out, and mem_read_in = mem_read_out*
 
 ![Waveform Example – Write](images/wave_with_bug.png)  
 *This waveform shows behavior when an intentional conflict or signal glitch is injected. For debugging purposes, mem_read_in and mem_write_in were briefly allowed to overlap or garbage values ('X', 'Z') were forced into the design to observe how the system responds to invalid states.*
-
----
 
 ## 💡 Key Learnings
 - I learned how to test the MEM stage on its own without needing the full CPU.
@@ -75,9 +71,6 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
 - I confirmed that memory only performs reads when mem_read_in = '1' and writes when mem_write_in = '1', with no conflicts between them.
 - I intentionally added bugs (like reading and writing at the same time) to see how errors show up in the waveform.
 - I made sure that the testbench never reads and writes to memory at the same time during normal operation.
-- I'm learning how to decide which signals should be passed to the next stage and which ones can be dropped, which helped me clean up my earlier pipeline stages.
-
----
 
 ## ▶️ How to Run
 
@@ -93,7 +86,6 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
     - Console output (for pass/fail)
     - Waveform viewer (for data, control, and glitch inspection)
 
----
 
 ## 👤 Author
 **Noridel Herron**  
