@@ -1,4 +1,3 @@
-----------------------------------------------------------------------------------
 --  Author      : Noridel Herron
 --  Description : Testbench for MEM_STAGE using uniform-based randomization.
 --                Tests 5000 randomized store/load operations with memory and
@@ -138,6 +137,15 @@ begin
                     failed := failed + 1;
                 end if;
             end if;
+
+            -- ADDITIONAL CHECK: ALU passthrough for ALU ops (op = "001")
+            op_in <= "001";
+            alu_result <= std_logic_vector(to_unsigned(rand_addr * 4 + 8, 32));
+            wait for 10 ns;
+            assert mem_out = alu_result
+                report "ALU passthrough failed: expected = " & to_hexstring(alu_result) &
+                       ", got = " & to_hexstring(mem_out)
+                severity error;
         end loop;
 
         report "MEM_STAGE TESTING COMPLETE: " & integer'image(passed) & " passed, " & integer'image(failed) & " failed";
