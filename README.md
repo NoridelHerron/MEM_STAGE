@@ -44,7 +44,6 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
   - `rd` register (0–31)
   - `reg_write_in` values
 - Separates memory **write** and **read** phases to prevent overlap
-- Asserts `mem_read_in` and `mem_write_in` are never high at the same time
 - Tracks `expected_memory` array to verify `mem_out` on each read
 - Simulates signal glitch injection using `'X'` and `'Z'` patterns
 
@@ -68,7 +67,6 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
 - I used the waveform viewer in Vivado to check signal values and detect problems like X (unknown) and Z (high-impedance).
 - I confirmed that memory only performs reads when op = '2' and writes when mem_write_in = '3', with no conflicts between them.
 - I intentionally added bugs (like reading and writing at the same time) to see how errors show up in the waveform.
-- I made sure that the testbench never reads and writes to memory at the same time during normal operation.
 
 ## ▶️ How to Run
 
