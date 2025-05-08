@@ -19,21 +19,18 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity MEM_STAGE is
-    Port ( clk           : in  std_logic;
+    Port ( -- expected input
+           clk           : in  std_logic;
            alu_result    : in  std_logic_vector(31 downto 0); -- Byte address from ALU (EX stage), used for memory read/write
            write_data    : in  std_logic_vector(31 downto 0); -- for store instruction
-           mem_out       : out std_logic_vector(31 downto 0); -- for load instruction
-    
+           op_in         : in  std_logic_vector(2 downto 0); 
+                   
            -- Pass-through control & destination signals
-           reg_write_in  : in  std_logic;
-           mem_read_in   : in  std_logic;
-           mem_write_in  : in  std_logic;
            rd_in         : in  std_logic_vector(4 downto 0);
     
            -- Output to WB stage
+           mem_out       : out std_logic_vector(31 downto 0); -- for load instruction
            reg_write_out : out std_logic;
-           mem_read_out : out std_logic;
-           mem_write_out : out std_logic;
            rd_out        : out std_logic_vector(4 downto 0)
          );
 end MEM_STAGE;
@@ -52,16 +49,22 @@ architecture behavior of MEM_STAGE is
     end component;
 
     signal mem_address : std_logic_vector(9 downto 0);
+    signal mem_read_sig, mem_write_sig : std_logic;
 
 begin
+    -- Compute word-aligned memory address (drop lower 2 bits)
     mem_address <= alu_result(11 downto 2); -- word-aligned
 
+    -- Control signals based on op_in
+    mem_read_sig  <= '1' when op_in = "010" else '0'; -- Load
+    mem_write_sig <= '1' when op_in = "011" else '0'; -- Store
+    
     -- Instantiate memory
-    memory_block: DATA_MEM port map (clk, mem_read_in, mem_write_in, mem_address, write_data, mem_out);
+    memory_block: DATA_MEM port map (clk, mem_read_sig, mem_write_sig, mem_address, write_data, mem_out);
 
-    -- Pass-through control and destination signals to WB 
-    reg_write_out <= reg_write_in;
+    -- Pass-through control and destination signals to WB
+    -- The mem_read_in and mem_write_in are drop because it is no longer needed for the next stage
+    reg_write_out  <= '1' when op_in = "010" or op_in = "001" else '0'; -- 
     rd_out        <= rd_in;
-    mem_read_out <= mem_read_in;
-    mem_write_out <= mem_write_in;
+    
 end behavior;
