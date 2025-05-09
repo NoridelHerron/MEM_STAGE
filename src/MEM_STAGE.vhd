@@ -20,31 +20,27 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity MEM_STAGE is
-    Port (
-        clk           : in  std_logic;
-        alu_result    : in  std_logic_vector(31 downto 0); -- From EX stage
-        write_data    : in  std_logic_vector(31 downto 0); -- From EX stage (store)
-        op_in         : in  std_logic_vector(2 downto 0);  -- Control signal
-        rd_in         : in  std_logic_vector(4 downto 0);  -- Destination register
-        
-        -- Outputs to WB stage
-        mem_out       : out std_logic_vector(31 downto 0); -- Load data or passthrough ALU result
-        reg_write_out : out std_logic;                     -- Register write enable
-        rd_out        : out std_logic_vector(4 downto 0)   -- Pass-through
-    );
+    Port ( clk           : in  std_logic;
+           alu_result    : in  std_logic_vector(31 downto 0); -- From EX stage
+           write_data    : in  std_logic_vector(31 downto 0); -- From EX stage (store)
+           op_in         : in  std_logic_vector(2 downto 0);  -- Control signal
+           rd_in         : in  std_logic_vector(4 downto 0);  -- Destination register
+            
+           -- Outputs to WB stage
+           mem_out       : out std_logic_vector(31 downto 0); -- Load data or passthrough ALU result
+           reg_write_out : out std_logic;                     -- Register write enable  
+           rd_out        : out std_logic_vector(4 downto 0) ); -- Pass-through
 end MEM_STAGE;
 
 architecture behavior of MEM_STAGE is
 
     component DATA_MEM
-        Port (
-            clk        : in  std_logic;
-            mem_read   : in  std_logic;
-            mem_write  : in  std_logic;
-            address    : in  std_logic_vector(9 downto 0);
-            write_data : in  std_logic_vector(31 downto 0);
-            read_data  : out std_logic_vector(31 downto 0)
-        );
+        Port ( clk        : in  std_logic;
+               mem_read   : in  std_logic;
+               mem_write  : in  std_logic;
+               address    : in  std_logic_vector(9 downto 0);
+               write_data : in  std_logic_vector(31 downto 0);
+               read_data  : out std_logic_vector(31 downto 0) );
     end component;
 
     signal mem_address   : std_logic_vector(9 downto 0);
@@ -63,14 +59,7 @@ begin
 
     -- Instantiate memory block
     memory_block : DATA_MEM
-        port map (
-            clk        => clk,
-            mem_read   => mem_read_sig,
-            mem_write  => mem_write_sig,
-            address    => mem_address,
-            write_data => write_data,
-            read_data  => mem_read_data
-        );
+        port map ( clk, mem_read_sig, mem_write_sig, mem_address, write_data, mem_read_data );
 
     -- Memory output logic
     process(op_in, alu_result, mem_read_data)

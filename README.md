@@ -16,7 +16,7 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
 - images/
     - tcl.png, wave_no_bug.png, wave_with_bug.png
 - src/
-    - MEM_STAGE.vhd, DATA_MEM.vhd, reusable_function.vhd, function_definition.vhd
+    - MEM_STAGE.vhd, DATA_MEM.vhd, reusable_function.vhd, reusable_func_def.vhd
 - test_benches/
     - tb_MEM_STAGE.vhd
 - .gitignore
@@ -31,9 +31,9 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
 | `clk`           | in   | 1      | Clock signal                          |
 | `alu_result`    | in   | 32     | Byte address from EX stage            |
 | `write_data`    | in   | 32     | Data to store into memory             |
-| `mem_out`       | out  | 32     | Data read from memory                 |
 | `op_in`         | in   | 3      | Control signal for load or store      |
 | `rd_in`         | in   | 5      | Destination register address (input)  |
+| `mem_out`       | out  | 32     | Data read from memory                 |
 | `reg_write_out` | out  | 1      | Passed to WB stage                    |
 | `rd_out`        | out  | 5      | Passed to WB stage                    |
 
@@ -43,7 +43,6 @@ This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V
   - 32-bit `write_data`
   - `rd` register (0–31)
   - `reg_write_in` values
-- Separates memory **write** and **read** phases to prevent overlap
 - Tracks `expected_memory` array to verify `mem_out` on each read
 - Simulates signal glitch injection using `'X'` and `'Z'` patterns
 

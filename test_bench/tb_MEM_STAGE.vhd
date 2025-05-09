@@ -14,24 +14,24 @@ use IEEE.MATH_REAL.ALL;
 library work;
 use work.reusable_function.all;
 
+-- no port needed
 entity tb_MEM_STAGE is
 end tb_MEM_STAGE;
 
 architecture sim of tb_MEM_STAGE is
 
     component MEM_STAGE
-        Port (
-           clk           : in  std_logic;
-           alu_result    : in  std_logic_vector(31 downto 0);
-           write_data    : in  std_logic_vector(31 downto 0);
-           op_in         : in  std_logic_vector(2 downto 0);
-           rd_in         : in  std_logic_vector(4 downto 0);
-           mem_out       : out std_logic_vector(31 downto 0);
-           reg_write_out : out std_logic;
-           rd_out        : out std_logic_vector(4 downto 0)
-        );
+        Port ( clk           : in  std_logic;
+              alu_result    : in  std_logic_vector(31 downto 0);
+              write_data    : in  std_logic_vector(31 downto 0);
+              op_in         : in  std_logic_vector(2 downto 0);
+              rd_in         : in  std_logic_vector(4 downto 0);
+              mem_out       : out std_logic_vector(31 downto 0);
+              reg_write_out : out std_logic;
+              rd_out        : out std_logic_vector(4 downto 0) );
     end component;
 
+    -- internal signal
     signal clk           : std_logic := '0';
     signal alu_result    : std_logic_vector(31 downto 0) := (others => '0');
     signal write_data    : std_logic_vector(31 downto 0) := (others => '0');
@@ -54,30 +54,26 @@ begin
         wait;
     end process;
 
-    uut: MEM_STAGE port map (
-        clk => clk,
-        alu_result => alu_result,
-        write_data => write_data,
-        op_in => op_in,
-        rd_in => rd_in,
-        mem_out => mem_out,
-        reg_write_out => reg_write_out,
-        rd_out => rd_out
-    );
+    uut: MEM_STAGE port map ( clk,  alu_result, write_data, op_in,
+                             rd_in, mem_out, reg_write_out, rd_out );
 
     stimulus : process
+        -- For generating values
         variable seed1, seed2 : positive := 42;
         variable rand_real    : real;
         variable rand_addr    : integer;
         variable rand_data    : std_logic_vector(31 downto 0);
         variable rand_rd      : std_logic_vector(4 downto 0);
         variable is_load      : boolean;
-        variable NUM_TESTS    : integer := 5000;
-        variable passed, failed : integer := 0;
+        variable NUM_TESTS    : integer := 5000; -- number of test
+        variable passed, failed : integer := 0; -- keep track pass and fail
     begin
         wait for 20 ns;
 
         for i in 0 to NUM_TESTS - 1 loop
+        
+            -- Generate value
+            -- mod make sure the memory index will be in range (0 to 1023)
             uniform(seed1, seed2, rand_real);
             rand_addr := integer(rand_real * 1024.0) mod 1024;
 
