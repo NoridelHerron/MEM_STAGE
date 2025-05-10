@@ -1,13 +1,13 @@
 # MEM_STAGE
 ## Overview
-This project implements the **Memory (MEM) Stage** of a 5-stage pipelined RISC-V processor using VHDL. It handles load (`lw`) and store (`sw`) instructions, performing word-aligned memory accesses via an external `DATA_MEM` module. The MEM stage also passes control signals (`rd`, `reg_write`) to the WB stage.
-*This project was designed, written, and tested by me as part of my exploration into pipelined CPU architecture.*
+This project implements the Memory (MEM) Stage of a 5-stage pipelined RISC-V processor using VHDL. The MEM stage handles lw (load word) and sw (store word) instructions and includes an internal DATA_MEM module for word-aligned memory access. A single 32-bit output comes from this stage, chosen based on the instruction type: for R-type and I-type instructions, the ALU result is forwarded; for load instructions, the value read from memory is returned; for store instructions, or when no result is needed, the output is set to zero. This stage also forwards control signals such as rd and reg_write to the WB stage.
+This project was designed, implemented, and thoroughly tested by me as part of my exploration into pipelined CPU architecture.
+
 
 ## Features
 - Interfaces with a 32-bit word-addressable memory (`DATA_MEM`)
 - Word-aligned address generation from `alu_result(11 downto 2)`
-- Memory read (`mem_read_in`) and write (`mem_write_in`) logic
-- Pass-through of control signals: `reg_write_in`, `rd_in`
+- Pass-through of control signals: `op_in`, `rd_in`
 - Fully randomized testbench with 5000 cases
 - Visual waveform inspection with injected errors for debugging
 
